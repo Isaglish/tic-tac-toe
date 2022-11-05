@@ -2,17 +2,13 @@ import tkinter as tk
 
 
 class Board:
-
     def __init__(self, root: tk.Tk, check_winner):
         self.root = root
         self.check_winner = check_winner
 
-    def create_board(self):
-        self.turn = "X"
-        self.count = 0
 
+    def create_board(self) -> None:
         self.turn_label_text = tk.StringVar()
-        self.turn_label_text.set("Current Turn: X")
 
         turn_label = tk.Label(self.root, textvariable=self.turn_label_text, font=("", 20), pady=10)
         turn_label.pack()
@@ -20,12 +16,13 @@ class Board:
         self.board = tk.Frame(self.root)
         self.board.pack()
 
-        self.create_buttons()
+        self.reset_board()
 
 
-    def reset_board(self):
+    def reset_board(self) -> None:
         self.turn = "X"
-        self.turn_label_text.set("Current Turn: X")
+        self.win = False
+        self.turn_label_text.set(f"Current Turn: X")
         self.count = 0
         self.create_buttons()
 
@@ -58,28 +55,27 @@ class Board:
                     height=BUTTON_HEIGHT,
                     cursor="tcross",
                     fg="black",
-                    bg="white"
+                    bg="white",
+                    relief="groove"
                 )
 
 
     def handle_button(self, button: tk.Button) -> None:
-        self.check_winner()
 
         if not button["text"]:
             if self.turn == "X":
-                button["text"] = self.turn
+                button["text"] = "X"
                 button["bg"] = "tomato"
-                button["fg"] = "white"
                 button["activebackground"] = "coral3"
-                button["activeforeground"] = "white"
                 self.turn = "O"
-                self.turn_label_text.set("Current Turn: O")
             else:
-                button["text"] = self.turn
+                button["text"] = "O"
                 button["bg"] = "cornflower blue"
-                button["fg"] = "white"
                 button["activebackground"] = "steel blue"
-                button["activeforeground"] = "white"
                 self.turn = "X"
-                self.turn_label_text.set("Current Turn: X")
 
+            self.turn_label_text.set(f"Current Turn: {self.turn}")
+            button["fg"] = "white"
+            button["activeforeground"] = "white"
+            self.count += 1
+            self.check_winner()
